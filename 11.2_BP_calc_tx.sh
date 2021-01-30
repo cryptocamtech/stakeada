@@ -52,6 +52,13 @@ rm balance.out
 echo Total ADA balance: ${total_balance}
 echo Number of UTXOs: ${txcnt}
 
+# for testing
+if [ -z "$tx_in" ]; then
+	echo "NOTE: 0 balance - using test account"
+	tx_in="--tx-in aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa#0"
+	total_balance="5000000000"
+fi
+
 keyDeposit=$(cat pool-files/params.json | jq -r '.keyDeposit')
 echo keyDeposit: $keyDeposit
 
@@ -75,7 +82,7 @@ fee=$(cardano-cli transaction calculate-min-fee \
 echo fee: $fee
 
 txOut=$((${total_balance}-${keyDeposit}-${fee}))
-echo Chainge Output: ${txOut}
+echo new balance: ${txOut}
 
 cardano-cli transaction build-raw \
     ${tx_in} \
@@ -86,7 +93,7 @@ cardano-cli transaction build-raw \
     --allegra-era \
     --out-file $ADA_USB_MNT/offline-files/tx.raw
 
-echo "tx.raw"
+echo "--- tx.raw"
 cat $ADA_USB_MNT/offline-files/tx.raw
 
 rm fullUtxo.out

@@ -12,9 +12,9 @@ fi
 
 cardano-cli transaction sign \
     --tx-body-file $ADA_USB_MNT/offline-files/tx.raw \
-    --signing-key-file pool-keys/payment.skey \
+    --signing-key-file pool-files/payment.skey \
     --signing-key-file offline-files/node.skey \
-    --signing-key-file pool-keys/stake.skey \
+    --signing-key-file pool-files/stake.skey \
     --mainnet \
     --out-file $ADA_USB_MNT/offline-files/tx.signed
 

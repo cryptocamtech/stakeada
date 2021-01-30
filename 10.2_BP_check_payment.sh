@@ -5,12 +5,12 @@ if [ -z "$ADA_USB_MNT" ]; then
 	exit 1
 fi
 
-if [ ! -f "$ADA_USB_MNT/pool-keys/payment.addr" ]; then
+if [ ! -f "$ADA_USB_MNT/hot-env/payment.addr" ]; then
 	echo "no payment addr!"
 	exit 1
 fi
 
 cardano-cli query utxo \
-    --address $(cat $ADA_USB_MNT/pool-keys/payment.addr) \
+    --address $(cat $ADA_USB_MNT/hot-env/payment.addr) \
     --allegra-era \
     --mainnet

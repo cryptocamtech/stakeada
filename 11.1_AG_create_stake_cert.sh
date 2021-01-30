@@ -6,7 +6,7 @@ if [ -z "$ADA_USB_MNT" ]; then
 fi
 
 cardano-cli stake-address registration-certificate \
-    --stake-verification-key-file pool-keys/stake.vkey \
+    --stake-verification-key-file pool-files/stake.vkey \
     --out-file hot-env/stake.cert
 
 cp hot-env/stake.cert $ADA_USB_MNT/hot-env

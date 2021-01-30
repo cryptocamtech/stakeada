@@ -17,18 +17,13 @@ fi
 
 mkdir -p hot-env
 mkdir -p offline-files
-
-cardano-cli node key-gen-KES \
-    --verification-key-file offline-files/kes.vkey \
-    --signing-key-file hot-env/kes.skey
-
 mkdir -p $ADA_USB_MNT/hot-env
 mkdir -p $ADA_USB_MNT/offline-files
 
-cp offline-files/kes.vkey $ADA_USB_MNT/offline-files
-
-# backup only
-cp hot-env/kes.skey $ADA_USB_MNT/hot-env
+# don't store public key on BP
+cardano-cli node key-gen-KES \
+    --verification-key-file $ADA_USB_MNT/offline-files/kes.vkey \
+    --signing-key-file hot-env/kes.skey
 
 # calculate start kes period
 slotsPerKESPeriod=$(cat $NODE_HOME/$NODE_GENESIS | jq -r '.slotsPerKESPeriod')
@@ -36,5 +31,7 @@ echo slotsPerKESPeriod: ${slotsPerKESPeriod}
 slotNo=$(cardano-cli query tip --mainnet | jq -r '.slotNo')
 echo slotNo: ${slotNo}
 kesPeriod=$((${slotNo} / ${slotsPerKESPeriod}))
+
+echo "--- use this for the next step"
 echo start KES period: ${kesPeriod}
 

@@ -5,10 +5,14 @@ if [ -z "$ADA_USB_MNT" ]; then
 	exit 1
 fi
 
+# give a 15 word mnemonic
 if [ -z "$1" ]; then
 	echo "usage: $0 <list of mnemonics>"
 	exit 1
 fi
+
+with_chain_code="--with-chain-code"
+if [ $(uname -m) == x86_64 ]; then with_chain_code=""; fi
 
 CADDR=${CADDR:=$( which cardano-address )}
 [[ -z "$CADDR" ]] && ( echo "cardano-address cannot be found, exiting..." >&2 ; exit 127 )
@@ -16,8 +20,8 @@ CADDR=${CADDR:=$( which cardano-address )}
 CCLI=${CCLI:=$( which cardano-cli )}
 [[ -z "$CCLI" ]] && ( echo "cardano-cli cannot be found, exiting..." >&2 ; exit 127 )
 
-rm -fr pool-keys
-OUT_DIR="pool-keys"
+rm -fr pool-files
+OUT_DIR="pool-files"
 mkdir -p "$OUT_DIR" && pushd "$OUT_DIR" > /dev/null
 MNEMONIC="$*"
 
@@ -33,10 +37,10 @@ TESTNET=0
 MAINNET=1
 NETWORK=$MAINNET
 
-cat payment.xprv |"$CADDR" key public --with-chain-code| tee payment.xpub |"$CADDR" address payment --network-tag $NETWORK |"$CADDR" address delegation $(cat stake.xprv | "$CADDR" key public --with-chain-code| tee stake.xpub) |tee base.addr_candidate |"$CADDR" address inspect
-echo "Generated from 1852H/1815H/0H/{0,2}/0"
+cat payment.xprv |"$CADDR" key public $with_chain_code| tee payment.xpub |"$CADDR" address payment --network-tag $NETWORK |"$CADDR" address delegation $(cat stake.xprv | "$CADDR" key public $with_chain_code| tee stake.xpub) |tee base.addr_candidate |"$CADDR" address inspect
+echo "--- payment.addr"
 cat base.addr_candidate
-echo
+echo 
 
 # XPrv/XPub conversion to normal private and public key, keep in mind the 
 # keypars are not a valind Ed25519 signing keypairs.
@@ -69,7 +73,6 @@ EOF
 "$CCLI" key non-extended-key --extended-verification-key-file payment.evkey --verification-key-file payment.vkey
 "$CCLI" key non-extended-key --extended-verification-key-file stake.evkey --verification-key-file stake.vkey
 
-
 "$CCLI" stake-address build --stake-verification-key-file stake.vkey $MAGIC > stake.addr
 "$CCLI" address build --payment-verification-key-file payment.vkey $MAGIC > payment.addr
 "$CCLI" address build     --payment-verification-key-file payment.vkey     --stake-verification-key-file stake.vkey     $MAGIC > base.addr
@@ -77,10 +80,8 @@ EOF
 diff -w base.addr base.addr_candidate
 cp base.addr $ADA_USB_MNT/hot-env/payment.addr
 
-#cp stake.vkey stake.skey stake.addr payment.vkey payment.skey payment.addr $ADA_USB_MNT/pool-keys
-
-# remove mnemonic phrase
-
+# remove history
+history -c && history -w
 
 popd >/dev/null
 
