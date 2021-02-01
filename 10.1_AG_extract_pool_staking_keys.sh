@@ -80,6 +80,10 @@ EOF
 diff -w base.addr base.addr_candidate
 cp base.addr $ADA_USB_MNT/hot-env/payment.addr
 
+# backups (really needs to be somewhere else)
+cp stake.skey $ADA_USB_MNT/backup-somewhere-else
+cp stake.vkey $ADA_USB_MNT/backup-somewhere-else
+
 # remove history
 history -c && history -w
 
