@@ -8,8 +8,7 @@ if [ -z "$NODE_HOME" ]; then
 fi
 
 if [ -z "$NODE_GENESIS" ]; then
-	echo "NODE_GENESIS NOT set"
-	exit 1
+	NODE_GENESIS=files/genesis.json
 fi
 
 export ADA_USB_MNT=`pwd`/test

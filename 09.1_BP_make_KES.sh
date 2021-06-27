@@ -28,7 +28,7 @@ cardano-cli node key-gen-KES \
 # calculate start kes period
 slotsPerKESPeriod=$(cat $NODE_HOME/$NODE_GENESIS | jq -r '.slotsPerKESPeriod')
 echo slotsPerKESPeriod: ${slotsPerKESPeriod}
-slotNo=$(cardano-cli query tip --mainnet | jq -r '.slotNo')
+slotNo=$(cardano-cli query tip --mainnet | jq -r '.slot')
 echo slotNo: ${slotNo}
 kesPeriod=$((${slotNo} / ${slotsPerKESPeriod}))
 
