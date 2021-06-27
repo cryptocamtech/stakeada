@@ -18,5 +18,4 @@ echo minPoolCost: ${minPoolCost}
 
 echo "--- poolMetaDataHash.txt"
 cat $ADA_USB_MNT/offline-files/poolMetaDataHash.txt
-rm poolMetaData.json
 

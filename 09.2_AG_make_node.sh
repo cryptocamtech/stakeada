@@ -36,7 +36,7 @@ cardano-cli node issue-op-cert \
 cp hot-env/node.cert $ADA_USB_MNT/hot-env
 
 # backups (really needs to be somewhere else)
-sudo mkdir $ADA_USB_MNT/backup-somewhere-else
+mkdir -p $ADA_USB_MNT/backup-somewhere-else
 cp offline-files/node.skey $ADA_USB_MNT/backup-somewhere-else
 cp offline-files/node.vkey $ADA_USB_MNT/backup-somewhere-else
 cp offline-files/node.counter $ADA_USB_MNT/backup-somewhere-else
